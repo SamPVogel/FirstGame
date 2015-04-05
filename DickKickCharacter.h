@@ -34,6 +34,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
 
+	// The animation to play while kicking
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* KickAnimation;
+
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
 
@@ -51,6 +55,15 @@ protected:
 	// End of APawn interface
 
 public:
+	/** Called for kick input */
+	void Kick();
+
+	/** Called for stopping the kicks */
+	void StopKick();
+
+	//Input Variables
+	bool bKick;
+
 	ADickKickCharacter(const FObjectInitializer& ObjectInitializer);
 
 	/** Player Attribute that keeps track of Health*/

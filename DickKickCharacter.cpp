@@ -15,9 +15,11 @@ ADickKickCharacter::ADickKickCharacter(const FObjectInitializer& ObjectInitializ
 	{
 		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> RunningAnimationAsset;
 		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> IdleAnimationAsset;
+		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> KickAnimationAsset;
 		FConstructorStatics()
 			: RunningAnimationAsset(TEXT("/Game/2dSideScroller/Sprites/RunningAnimation.RunningAnimation"))
 			, IdleAnimationAsset(TEXT("/Game/2dSideScroller/Sprites/IdleAnimation.IdleAnimation"))
+			, KickAnimationAsset(TEXT("/Game/2dSideScroller/Sprites/KickAnimation.KickAnimation"))
 		{
 		}
 	};
@@ -29,6 +31,7 @@ ADickKickCharacter::ADickKickCharacter(const FObjectInitializer& ObjectInitializ
 
 	RunningAnimation = ConstructorStatics.RunningAnimationAsset.Get();
 	IdleAnimation = ConstructorStatics.IdleAnimationAsset.Get();
+	KickAnimation = ConstructorStatics.KickAnimationAsset.Get();
 	GetSprite()->SetFlipbook(IdleAnimation);
 
 	// Use only Yaw from the controller and ignore the rest of the rotation.
@@ -91,6 +94,16 @@ void ADickKickCharacter::UpdateAnimation()
 
 	// Are we moving or standing still?
 	UPaperFlipbook* DesiredAnimation = (PlayerSpeed > 0.0f) ? RunningAnimation : IdleAnimation;
+	DesiredAnimation = (bKick) ? KickAnimation : DesiredAnimation;
+
+	/** 
+	if (PlayerSpeed > 0.0f)
+		UPaperFlipbook* DesiredAnimation = RunningAnimation;
+	else if (bKick)
+		UPaperFlipbook* DesiredAnimation = KickAnimation;
+	else
+		UPaperFlipbook* DesiredAnimation = IdleAnimation;
+	*/
 
 	GetSprite()->SetFlipbook(DesiredAnimation);
 }
@@ -104,6 +117,8 @@ void ADickKickCharacter::SetupPlayerInputComponent(class UInputComponent* InputC
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	InputComponent->BindAxis("MoveRight", this, &ADickKickCharacter::MoveRight);
+	InputComponent->BindAction("Kick", IE_Pressed, this, &ADickKickCharacter::Kick);
+	InputComponent->BindAction("Kick", IE_Released, this, &ADickKickCharacter::StopKick);
 
 	InputComponent->BindTouch(IE_Pressed, this, &ADickKickCharacter::TouchStarted);
 	InputComponent->BindTouch(IE_Released, this, &ADickKickCharacter::TouchStopped);
@@ -129,6 +144,16 @@ void ADickKickCharacter::MoveRight(float Value)
 
 	// Apply the input to the character motion
 	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+}
+
+void ADickKickCharacter::Kick()
+{
+	bKick = true;
+}
+
+void ADickKickCharacter::StopKick()
+{
+	bKick = false;
 }
 
 void ADickKickCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
