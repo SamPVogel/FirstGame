@@ -26,7 +26,7 @@ ADickKickCharacter::ADickKickCharacter(const FObjectInitializer& ObjectInitializ
 	static FConstructorStatics ConstructorStatics;
 
 	// Initialize health and kickstr
-	Health = 5;
+	Health = 3;
 	KickStr = 1;
 
 	RunningAnimation = ConstructorStatics.RunningAnimationAsset.Get();
@@ -43,23 +43,23 @@ ADickKickCharacter::ADickKickCharacter(const FObjectInitializer& ObjectInitializ
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
 
-	// Create a camera boom attached to the root (capsule)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->AttachTo(RootComponent);
-	CameraBoom->TargetArmLength = 500.0f;
-	CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 75.0f);
-	CameraBoom->bAbsoluteRotation = true;
-	CameraBoom->RelativeRotation = FRotator(0.0f, -90.0f, 0.0f);
+	//// Create a camera boom attached to the root (capsule)
+	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	//CameraBoom->AttachTo(RootComponent);
+	//CameraBoom->TargetArmLength = 500.0f;
+	//CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 75.0f);
+	//CameraBoom->bAbsoluteRotation = true;
+	//CameraBoom->RelativeRotation = FRotator(0.0f, -90.0f, 0.0f);
 
-	// Create an orthographic camera (no perspective) and attach it to the boom
-	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
-	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
-	SideViewCameraComponent->OrthoWidth = 2048.0f;
-	SideViewCameraComponent->AttachTo(CameraBoom, USpringArmComponent::SocketName);
+	//// Create an orthographic camera (no perspective) and attach it to the boom
+	//SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
+	//SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
+	//SideViewCameraComponent->OrthoWidth = 2048.0f;
+	//SideViewCameraComponent->AttachTo(CameraBoom, USpringArmComponent::SocketName);
 
-	// Prevent all automatic rotation behavior on the camera, character, and camera component
-	CameraBoom->bAbsoluteRotation = true;
-	SideViewCameraComponent->bUsePawnControlRotation = false;
+	//// Prevent all automatic rotation behavior on the camera, character, and camera component
+	//CameraBoom->bAbsoluteRotation = true;
+	//SideViewCameraComponent->bUsePawnControlRotation = false;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	// Configure character movement
